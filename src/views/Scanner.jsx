@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthModal from '../components/AuthModal';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API_URL, isLocalApi } from '../config/api';
 
 const Scanner = () => {
   const [isScanning, setIsScanning] = useState(false);
@@ -53,8 +53,17 @@ const Scanner = () => {
         setResult(data.data);
       }
     } catch (error) {
-      console.error(error);
-      const errMsg = error.response?.data?.message || 'Error communicating with AI Router.';
+      console.error('Scan Error:', error);
+      let errMsg = error.response?.data?.message;
+      if (!errMsg) {
+        if (isLocalApi && window.location.hostname !== 'localhost') {
+          errMsg = `Frontend is pointing to ${API_URL}. Please set VITE_API_URL in your Vercel Environment Variables and Redeploy.`;
+        } else if (error.code === 'ERR_NETWORK') {
+          errMsg = `Network error connecting to ${API_URL}. Render free instances take ~50s to wake up on first request. Try again shortly!`;
+        } else {
+          errMsg = error.message || 'Error communicating with AI Router.';
+        }
+      }
       setErrorMsg(errMsg);
     } finally {
       setIsScanning(false);
