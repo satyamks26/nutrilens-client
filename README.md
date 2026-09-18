@@ -38,6 +38,12 @@ Make sure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
     ```bash
     npm install
     ```
+3.  Configure Environment Variables:
+    Create a `.env` file or copy `.env.example`:
+    ```bash
+    cp .env.example .env
+    ```
+    Set `VITE_API_URL` to your backend server URL (defaults to `http://localhost:5000` if omitted).
 
 ### Running Locally
 

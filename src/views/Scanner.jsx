@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import AuthModal from '../components/AuthModal';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const Scanner = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -42,7 +44,7 @@ const Scanner = () => {
       }
 
       // Hit the real backend connected to FatSecret
-      const response = await axios.post('http://localhost:5000/api/meals/scan', formData);
+      const response = await axios.post(`${API_URL}/api/meals/scan`, formData);
       const data = response.data;
 
       if (data.type === 'water_detected') {

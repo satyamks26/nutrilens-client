@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const GlobalContext = createContext();
 
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -33,7 +35,7 @@ export const GlobalProvider = ({ children }) => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/meals/history');
+        const response = await axios.get(`${API_URL}/api/meals/history`);
         const dbHistory = response.data;
         setHistory(dbHistory);
         
@@ -56,7 +58,7 @@ export const GlobalProvider = ({ children }) => {
     };
     const fetchProgressPhotos = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/progress');
+        const response = await axios.get(`${API_URL}/api/progress`);
         setProgressPhotos(response.data);
       } catch (error) {
         console.error("Failed to fetch progress photos:", error);
@@ -69,7 +71,7 @@ export const GlobalProvider = ({ children }) => {
   const addMeal = async (meal) => {
     try {
       // Send to backend MongoDB
-      const response = await axios.post('http://localhost:5000/api/meals', meal);
+      const response = await axios.post(`${API_URL}/api/meals`, meal);
       const savedMeal = response.data;
 
       // Update UI state
@@ -96,7 +98,7 @@ export const GlobalProvider = ({ children }) => {
 
   const addProgressPhoto = async (formData) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/progress', formData, {
+      const response = await axios.post(`${API_URL}/api/progress`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setProgressPhotos([response.data, ...progressPhotos]);
